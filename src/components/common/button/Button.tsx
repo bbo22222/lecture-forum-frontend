@@ -12,6 +12,10 @@ const StyledButton = styled.button<{ $color: ButtonColorType; $variant: ButtonVa
     // 사용하는 곳에서 속성(color)으로 전달된 값은 props.$color 에 존재
     // 실제로 사용해야 되는 색상코드는 props.theme.color에 있음 primary, secondary 같은 프로퍼티의 값으로서 존재
     background-color: ${props => (props.$variant === "contained" ? props.theme.color[props.$color] : "transparent")};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: ${props => props.$variant === "icon"? "1": "auto"}; // 정사각형 만들기 위해 비율 강제
     font-size: 14px;
     font-weight: 600;
     color: ${props => (props.$variant === "contained" ? "#FFFFFF" : props.theme.color[props.$color])};
