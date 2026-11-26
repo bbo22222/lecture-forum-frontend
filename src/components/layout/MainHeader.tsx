@@ -47,7 +47,7 @@ function MainHeader() {
                 </Logo>
                 <NavGroup>
                     <Button color={"secondary"} variant={"icon"} onClick={() => console.log("테마변경")}>
-                        <IoMoon size={27}/>
+                        <IoMoon size={20}/>
                     </Button>
                     <Button as={Link} to={"/auth/signin"} color={"secondary"} variant={"text"}>
                         로그인
