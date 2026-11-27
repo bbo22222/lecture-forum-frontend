@@ -75,6 +75,8 @@ function SignUpPage() {
     const onSubmit = async (input:CreateUserInputType) => {
         //입력된 정보(input)을 가지고 백엔드에게 요청
         //앞으로 fetch 를 사용하지 않을 것임. axios 패키지를 이용할 것임
+
+        // 전송을 하고 그에 대해 성공하면 어떤 일을 하겠다를 try 안에 작성할 것임
         try{
             // 전송에 대한 내용을 기재하면 되는데, 그대로 데이터를 전달할 것인가?
             //프론트엔드에서"만' 필요한 confirmPassword 항목이 있으니, 이것을 제외하고 전송
@@ -91,18 +93,38 @@ function SignUpPage() {
                 },
                 body: JSON.stringify(submitData), // 객체를 그대로 body 에 담아서 보낼 수 없고, JSON.stringify()를 통해 JSON 형식의 string으로 변환
             });
-            // 전송을 하고 그에 대해 성공하면 어떤 일을 하겠다를 try 안에 작성할 것임
+
+            //fetch 는 백엔드가 400대나 500대로 오류임을 표시해도,
+            //"성공"으로 생각함 ->어쨌든 응답을 받았기 때문에
 
             // 백엔드에서 보내준 응답(string)을 JSON으로 파싱함
             const result = await response.json();
 
-            alert("회원가입이 완료되었습니다. 로그인을 진행해주세요.")
-            navigate("/auth/signin")
+            if(!result.ok){
+                //에러를 일으키는 명령
+                throw new Error(result.message|| "회원가입 중 오류가 발생했습니다.");
+            }
+             alert("회원가입이 완료되었습니다. 로그인을 진행해주세요.")
+             navigate("/auth/signin")
         }catch(error){
+            if(error instanceof Error) {
+                const errorMessage = error.message;
+                if (errorMessage === "이미 사용 중인 아이디입니다.") {
+                    setError("username", { message: errorMessage });
+                    return;
+                } else if (errorMessage === "이미 사용 중인 이메일입니다.") {
+                    setError("email", { message: errorMessage });
+                    return;
+                } else if (errorMessage === "이미 사용 중인 닉네임입니다.") {
+                    setError("nickname", { message: errorMessage });
+                    return;
+                } else {
+                    setError("root", { message: errorMessage });
+                    return;
+                }
+            }
             setError("root",{message:"회원가입이 실패했습니다. 다시 시도해주세요."})
-
         }
-
     };
 
 
